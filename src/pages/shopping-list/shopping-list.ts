@@ -3,6 +3,9 @@ import { NgForm } from '@angular/forms';
 
 import { ShoppingListService } from '../../services/shopping-list';
 import { Ingredient } from '../../models/ingredient';
+import { PopoverController } from 'ionic-angular';
+import { SLOptionsPage } from './sl-options/sl-options';
+import { AuthService } from '../../services/auth';
 
 @Component({
   selector: 'page-shopping-list',
@@ -11,7 +14,9 @@ import { Ingredient } from '../../models/ingredient';
 export class ShoppingListPage {
   listItems: Ingredient[];
 
-  constructor(private slService: ShoppingListService){}
+  constructor(private slService: ShoppingListService, 
+              private popoverCtrl : PopoverController, 
+              private authService : AuthService){}
 
   ionViewWillEnter(){
     this.loadItems();
@@ -21,6 +26,47 @@ export class ShoppingListPage {
     this.slService.addItem(form.value.ingredientName,form.value.amount);
     form.reset();
     this.loadItems();
+  }
+
+  onShowOptions (event: MouseEvent) {
+    const popover = this.popoverCtrl.create(SLOptionsPage);
+    popover.present({ev: event});
+    popover.onDidDismiss(
+      data => {
+        if(data.action == 'load'){
+          this.authService.getActiveUser().getIdToken()
+          .then(
+            (token: string) => {
+              this.slService.fetchList(token)
+                .subscribe(
+                  (list: Ingredient[]) => {
+                    if (list) {
+                      this.listItems = list;
+                    } else {
+                      this.listItems = [];
+                    }
+                  },
+                  error => {console.log('error');}
+                );
+            }
+          );
+        } 
+        else
+        {
+          this.authService.getActiveUser().getIdToken()
+          .then(
+            (token: string) => {
+              this.slService.storeList(token)
+                .subscribe(
+                  () => console.log('Success!'),
+                  error => {console.log('error');}
+                );
+            }
+          );
+        }
+      }
+    );
+
   }
 
   onCheckItem(index: number) {

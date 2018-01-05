@@ -13,6 +13,11 @@ import { TabsPage } from '../pages/tabs/tabs';
 
 import { ShoppingListService } from '../services/shopping-list';
 import { RecipesService } from '../services/recipes';
+import { SigninPage } from '../pages/signin/signin';
+import { SignupPage } from '../pages/signup/signup';
+import { AuthService } from '../services/auth';
+import { SLOptionsPage } from '../pages/shopping-list/sl-options/sl-options';
+import { HttpModule } from '@angular/http';
 
 
 @NgModule({
@@ -22,13 +27,18 @@ import { RecipesService } from '../services/recipes';
     RecipePage,
     RecipesPage,
     ShoppingListPage,
-    TabsPage
+    TabsPage,
+    SigninPage,
+    SignupPage,
+    SLOptionsPage
     
 
   ],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(MyApp)
+    IonicModule.forRoot(MyApp),
+    HttpModule,
+
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -37,7 +47,10 @@ import { RecipesService } from '../services/recipes';
     RecipePage,
     RecipesPage,
     ShoppingListPage,
-    TabsPage
+    TabsPage,
+    SigninPage,
+    SignupPage,
+    SLOptionsPage
 
   ],
   providers: [
@@ -45,7 +58,8 @@ import { RecipesService } from '../services/recipes';
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     ShoppingListService,
-    RecipesService
+    RecipesService,
+    AuthService
   ]
 })
 export class AppModule {}
