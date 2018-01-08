@@ -1,54 +1,55 @@
 import { Ingredient } from "../models/ingredient";
 import { Injectable } from "@angular/core";
-import { Http, Response} from "@angular/http";
-import { AuthService } from "./auth";
+import { Http, Response } from "@angular/http";
 import 'rxjs/Rx';
+
+import { AuthService } from "./auth";
 
 @Injectable()
 export class ShoppingListService {
-    private ingredients: Ingredient[] = [];
+  private ingredients: Ingredient[] = [];
 
-    constructor (private http: Http, private authService : AuthService) {};
+  constructor(private http: Http, private authService: AuthService) {
+  }
 
-    addItem(name: string, amount: number) {
-        this.ingredients.push(new Ingredient(name, amount));
-        console.log(this.ingredients);
-    }
+  addItem(name: string, amount: number) {
+    this.ingredients.push(new Ingredient(name, amount));
+    console.log(this.ingredients);
+  }
 
-    addItems (items: Ingredient[]){
-        this.ingredients.push(...items);
-        
-    }
+  addItems(items: Ingredient[]) {
+    this.ingredients.push(...items);
+  }
 
-    getItems() {
-        return this.ingredients.slice();
-    }
-8
-    removeItem(index: number){
-        this.ingredients.splice(index, 1);
-    }
+  getItems() {
+    return this.ingredients.slice();
+  }
 
-    storeList (token: string) { 
-        const userId = this.authService.getActiveUser().uid;
-        return this.http.put('https://ionic3-recipebook-939bb.firebaseio.com/' + userId +
-             '/shopping-list.json?auth=' + token, this.ingredients)
-             .map((response: Response) => {
-                 return response.json;
-             });
-    }
+  removeItem(index: number) {
+    this.ingredients.splice(index, 1);
+  }
 
-    fetchList (token: string) {
-        const userId = this.authService.getActiveUser().uid;
+  storeList(token: string) {
+    const userId = this.authService.getActiveUser().uid;
+    return this.http
+      .put('https://ionic3-recipebook-939bb.firebaseio.com/' + userId + '/shopping-list.json?auth=' + token, this.ingredients)
+      .map((response: Response) => {
+        return response.json();
+      });
+  }
 
-        return this.http.get('https://ionic3-recipebook-939bb.firebaseio.com/' + userId +
-        '/shopping-list.json?auth=' + token)
-            .map((response: Response) => {
-                return response.json();
-            })
-            .do((data) => {
-                this.ingredients = data
-            });
-
-
-    }
+  fetchList(token: string) {
+    const userId = this.authService.getActiveUser().uid;
+    return this.http.get('https://ionic3-recipebook-939bb.firebaseio.com/' + userId + '/shopping-list.json?auth=' + token)
+      .map((response: Response) => {
+        return response.json();
+      })
+      .do((ingredients: Ingredient[]) => {
+        if (ingredients) {
+          this.ingredients = ingredients
+        } else {
+          this.ingredients = [];
+        }
+      });
+  }
 }

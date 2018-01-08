@@ -16,7 +16,7 @@ import { RecipesService } from '../services/recipes';
 import { SigninPage } from '../pages/signin/signin';
 import { SignupPage } from '../pages/signup/signup';
 import { AuthService } from '../services/auth';
-import { SLOptionsPage } from '../pages/shopping-list/sl-options/sl-options';
+import { DatabaseOptionsPage } from '../pages/shopping-list/database-options/database-options';
 import { HttpModule } from '@angular/http';
 
 
@@ -30,7 +30,7 @@ import { HttpModule } from '@angular/http';
     TabsPage,
     SigninPage,
     SignupPage,
-    SLOptionsPage
+    DatabaseOptionsPage
     
 
   ],
@@ -50,7 +50,7 @@ import { HttpModule } from '@angular/http';
     TabsPage,
     SigninPage,
     SignupPage,
-    SLOptionsPage
+    DatabaseOptionsPage
 
   ],
   providers: [
